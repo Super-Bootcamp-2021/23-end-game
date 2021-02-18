@@ -33,6 +33,7 @@ export function publish(subject: string, data: { [key: string]: any }): void {
  * @param subject
  * @param callback
  */
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function subscribe(subject: string, callback: Function): number {
   return client.subscribe(subject, callback);
 }

@@ -24,6 +24,7 @@ async function init(): Promise<void> {
     console.log('database connected');
   } catch (err) {
     console.error('database connection failed');
+    console.error(err);
     process.exit(1);
   }
   try {
@@ -32,6 +33,7 @@ async function init(): Promise<void> {
     console.log('object storage connected');
   } catch (err) {
     console.error('object storage connection failed');
+    console.error(err);
     process.exit(1);
   }
   try {
@@ -40,6 +42,7 @@ async function init(): Promise<void> {
     console.log('message bus connected');
   } catch (err) {
     console.error('message bus connection failed');
+    console.error(err);
     process.exit(1);
   }
   try {
@@ -48,6 +51,7 @@ async function init(): Promise<void> {
     console.log('key value store connected');
   } catch (err) {
     console.error('key value store connection failed');
+    console.error(err);
     process.exit(1);
   }
 }

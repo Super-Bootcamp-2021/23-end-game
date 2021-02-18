@@ -20,6 +20,7 @@ export async function connect(
 ): Promise<void> {
   client = new Client({
     ...options,
+    port: parseInt(options.port.toString(), 10),
     useSSL: false,
   });
   bucketname = _bucketname || 'photo';

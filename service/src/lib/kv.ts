@@ -9,7 +9,10 @@ let client: RedisClient;
  */
 export function connect(options?: ClientOpts): Promise<null> {
   return new Promise((resolve, reject) => {
-    client = createClient(options);
+    client = createClient({
+      ...options,
+      port: parseInt(options.port.toString(), 10),
+    });
     client.on('connect', () => {
       resolve(null);
     });
