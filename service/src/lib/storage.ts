@@ -24,7 +24,7 @@ export async function connect(
   });
   bucketname = _bucketname || 'photo';
   try {
-    await client.makeBucket(bucketname, null);
+    await client.makeBucket(bucketname, 'us-east-1');
   } catch (err) {
     if (err?.code === 'BucketAlreadyOwnedByYou') {
       return;

@@ -125,6 +125,10 @@ paths:
           $ref: '#/responses/TaskInfo'
         404:
           $ref: '#/responses/TaskNotFound'
+        403:
+          description: forbidden
+          examples:
+            'text/plain': pekerjaan sudah selesai
         500:
           $ref: '#/responses/InternalServerError'
 

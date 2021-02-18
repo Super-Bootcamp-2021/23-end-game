@@ -13,7 +13,7 @@ tags:
 
 paths:
   /summary:
-    post:
+    get:
       tags:
         - performance
       operationId: summary

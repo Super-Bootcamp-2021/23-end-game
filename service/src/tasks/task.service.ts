@@ -10,6 +10,7 @@ import {
   list,
   ERROR_TASK_DATA_INVALID,
   ERROR_TASK_NOT_FOUND,
+  ERROR_TASK_ALREADY_DONE,
 } from './task';
 import { saveFile, readFile, ERROR_FILE_NOT_FOUND } from '../lib/storage';
 
@@ -144,6 +145,12 @@ export async function doneSvc(
   } catch (err) {
     if (err === ERROR_TASK_NOT_FOUND) {
       res.statusCode = 404;
+      res.write(err);
+      res.end();
+      return;
+    }
+    if (err === ERROR_TASK_ALREADY_DONE) {
+      res.statusCode = 403;
       res.write(err);
       res.end();
       return;

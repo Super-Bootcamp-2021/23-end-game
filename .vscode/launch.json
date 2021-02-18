@@ -7,9 +7,30 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "service",
+      "name": "worker service",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\index.js",
+      "preLaunchTask": "npm: svc:build",
+      "program": "${workspaceFolder}\\service\\dist\\main.js",
+      "args": ["worker"],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "task service",
+      "skipFiles": ["<node_internals>/**"],
+      "preLaunchTask": "npm: svc:build",
+      "program": "${workspaceFolder}\\service\\dist\\main.js",
+      "args": ["task"],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "performance service",
+      "skipFiles": ["<node_internals>/**"],
+      "preLaunchTask": "npm: svc:build",
+      "program": "${workspaceFolder}\\service\\dist\\main.js",
       "args": ["performance"],
       "console": "integratedTerminal"
     },
@@ -49,8 +70,12 @@
   ],
   "compounds": [
     {
-      "name": "service-chrome",
-      "configurations": ["service", "chrome"]
+      "name": "full-with-chrome",
+      "configurations": ["worker service", "task service", "performance service", "chrome"]
+    },
+    {
+      "name": "service",
+      "configurations": ["worker service", "task service", "performance service"]
     }
   ]
 }
