@@ -10,7 +10,7 @@ export const WorkerList = Vue.extend({
     return createElement('div', [
       createElement('h4', 'Daftar pekerja'),
       createElement('div', { domProps: { id: 'list' } }, [
-        ...this.state?.workers.map((worker: Worker) =>
+        ...(this.workers?.map((worker: Worker) =>
           createElement('div', [
             createElement('img', {
               domProps: {
@@ -30,7 +30,7 @@ export const WorkerList = Vue.extend({
               'hapus'
             ),
           ])
-        ),
+        ) ?? []),
       ]),
     ]);
   },
