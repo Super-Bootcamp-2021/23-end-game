@@ -1,2 +1,5 @@
-exports.SERVICE_BASEURL =
+/**
+ * worker service base url
+ */
+export const SERVICE_BASEURL =
   process.env['WORKER_SERVICE_BASEURL'] ?? 'http://localhost:7001';

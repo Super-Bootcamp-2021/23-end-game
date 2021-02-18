@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * make http client to certain endpoint
  * @param endpoint service endpoint
@@ -68,8 +69,8 @@ client.get = <T>(endpoint: string, customConf: RequestInit = {}) => {
  */
 client.post = <T>(
   endpoint: string,
-  body: BodyInit,
-  json: boolean,
+  body?: BodyInit | any,
+  json = false,
   customConf: RequestInit = {}
 ) => {
   return client<T>(endpoint, json, { method: 'POST', body, ...customConf });
@@ -84,8 +85,8 @@ client.post = <T>(
  */
 client.put = <T>(
   endpoint: string,
-  body: BodyInit,
-  json: boolean,
+  body?: BodyInit | any,
+  json = false,
   customConf: RequestInit = {}
 ) => {
   return client<T>(endpoint, json, { method: 'PUT', body, ...customConf });
@@ -100,8 +101,8 @@ client.put = <T>(
  */
 client.del = <T>(
   endpoint: string,
-  body: BodyInit,
-  json: boolean,
+  body?: BodyInit | any,
+  json = false,
   customConf: RequestInit = {}
 ) => {
   return client<T>(endpoint, json, { method: 'DELETE', body, ...customConf });

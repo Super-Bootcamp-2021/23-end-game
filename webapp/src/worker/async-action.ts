@@ -1,13 +1,21 @@
-const {
+import { Dispatch } from '@reduxjs/toolkit';
+import {
   loadingAction,
   errorAction,
   registeredAction,
   removedAction,
   workersLoadedAction,
-} = require('./store');
-const workerSvc = require('./worker.client');
+} from './store';
+import * as workerSvc from './worker.client';
+import { WorkerData } from './worker.client';
 
-exports.register = (data) => async (dispatch) => {
+/**
+ * action to register a new worker
+ * @param data new worker data
+ */
+export const register = (data: WorkerData) => async (
+  dispatch: Dispatch
+): Promise<void> => {
   dispatch(loadingAction());
   try {
     const worker = await workerSvc.register(data);
@@ -17,7 +25,13 @@ exports.register = (data) => async (dispatch) => {
   }
 };
 
-exports.remove = (id) => async (dispatch) => {
+/**
+ * action to remove a worker from database
+ * @param id worker id
+ */
+export const remove = (id: number) => async (
+  dispatch: Dispatch
+): Promise<void> => {
   dispatch(loadingAction());
   try {
     await workerSvc.remove(id);
@@ -27,7 +41,11 @@ exports.remove = (id) => async (dispatch) => {
   }
 };
 
-exports.getList = async (dispatch) => {
+/**
+ * action to get list of worker
+ * @param dispatch
+ */
+export const getList = async (dispatch: Dispatch): Promise<void> => {
   dispatch(loadingAction());
   try {
     const workers = await workerSvc.list();
