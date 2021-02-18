@@ -1,23 +1,25 @@
-const orm = require('./lib/orm');
-const storage = require('./lib/storage');
-const kv = require('./lib/kv');
-const bus = require('./lib/bus');
-const { TaskSchema } = require('./tasks/task.model');
-const { WorkerSchema } = require('./worker/worker.model');
-const workerServer = require('./worker/server');
-const tasksServer = require('./tasks/server');
-const performanceServer = require('./performance/server');
+import * as orm from './lib/orm';
+import * as storage from './lib/storage';
+import * as kv from './lib/kv';
+import * as bus from './lib/bus';
+import { Task } from './tasks/task.model';
+import { Worker } from './worker/worker.model';
+import * as workerServer from './worker/server';
+import * as tasksServer from './tasks/server';
+import * as performanceServer from './performance/server';
+import { config } from './config';
 
-async function init() {
+const { postgres, minio, nats, redis, performance, worker, task } = config;
+
+/**
+ * intitate database and service connection
+ */
+async function init(): Promise<void> {
   try {
     console.log('connect to database');
-    await orm.connect([WorkerSchema, TaskSchema], {
+    await orm.connect([Worker, Task], {
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'sanbercode2',
+      ...postgres,
     });
     console.log('database connected');
   } catch (err) {
@@ -26,13 +28,7 @@ async function init() {
   }
   try {
     console.log('connect to object storage');
-    await storage.connect('task-manager', {
-      endPoint: '127.0.0.1',
-      port: 9000,
-      useSSL: false,
-      accessKey: 'local-minio',
-      secretKey: 'local-test-secret',
-    });
+    await storage.connect('task-manager', minio);
     console.log('object storage connected');
   } catch (err) {
     console.error('object storage connection failed');
@@ -40,7 +36,7 @@ async function init() {
   }
   try {
     console.log('connect to message bus');
-    await bus.connect();
+    await bus.connect(nats.url);
     console.log('message bus connected');
   } catch (err) {
     console.error('message bus connection failed');
@@ -48,7 +44,7 @@ async function init() {
   }
   try {
     console.log('connect to key value store');
-    await kv.connect();
+    await kv.connect(redis);
     console.log('key value store connected');
   } catch (err) {
     console.error('key value store connection failed');
@@ -56,24 +52,31 @@ async function init() {
   }
 }
 
+/**
+ * close bus & kv connection when server stop working
+ */
 async function onStop() {
   bus.close();
   kv.close();
 }
 
-async function main(command) {
+/**
+ * application main routine
+ * @param command command argument, only allow task, worker or performance
+ */
+async function main(command: string): Promise<void> {
   switch (command) {
     case 'performance':
       await init();
-      performanceServer.run(onStop);
+      performanceServer.run(performance.server.port, onStop);
       break;
     case 'task':
       await init();
-      tasksServer.run(onStop);
+      tasksServer.run(task.server.port, onStop);
       break;
     case 'worker':
       await init();
-      workerServer.run(onStop);
+      workerServer.run(worker.server.port, onStop);
       break;
     default:
       console.log(`${command} tidak dikenali`);

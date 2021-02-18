@@ -1,18 +1,24 @@
-const Busboy = require('busboy');
-const url = require('url');
-const mime = require('mime-types');
-const { Writable } = require('stream');
-const {
+import { IncomingMessage, ServerResponse } from 'http';
+import Busboy from 'busboy';
+import url from 'url';
+import mime from 'mime-types';
+import { Writable, Readable } from 'stream';
+import {
   add,
   cancel,
   done,
   list,
   ERROR_TASK_DATA_INVALID,
   ERROR_TASK_NOT_FOUND,
-} = require('./task');
-const { saveFile, readFile, ERROR_FILE_NOT_FOUND } = require('../lib/storage');
+} from './task';
+import { saveFile, readFile, ERROR_FILE_NOT_FOUND } from '../lib/storage';
 
-function addSvc(req, res) {
+/**
+ * service to handle task addition
+ * @param req
+ * @param res
+ */
+export function addSvc(req: IncomingMessage, res: ServerResponse): void {
   const busboy = new Busboy({ headers: req.headers });
 
   const data = {
@@ -32,40 +38,43 @@ function addSvc(req, res) {
     }
   }
 
-  busboy.on('file', async (fieldname, file, filename, encoding, mimetype) => {
-    switch (fieldname) {
-      case 'attachment':
-        try {
-          data.attachment = await saveFile(file, mimetype);
-        } catch (err) {
-          abort();
-        }
-        if (!req.aborted && finished) {
+  busboy.on(
+    'file',
+    async (fieldname, file: Readable, filename, encoding, mimetype) => {
+      switch (fieldname) {
+        case 'attachment':
           try {
-            const task = await add(data);
-            res.setHeader('content-type', 'application/json');
-            res.write(JSON.stringify(task));
+            data.attachment = await saveFile(file, mimetype);
           } catch (err) {
-            if (err === ERROR_TASK_DATA_INVALID) {
-              res.statusCode = 401;
-            } else {
-              res.statusCode = 500;
-            }
-            res.write(err);
+            abort();
           }
-          res.end();
+          if (!req.aborted && finished) {
+            try {
+              const task = await add(data);
+              res.setHeader('content-type', 'application/json');
+              res.write(JSON.stringify(task));
+            } catch (err) {
+              if (err === ERROR_TASK_DATA_INVALID) {
+                res.statusCode = 401;
+              } else {
+                res.statusCode = 500;
+              }
+              res.write(err);
+            }
+            res.end();
+          }
+          break;
+        default: {
+          const noop = new Writable({
+            write(chunk, encding, callback) {
+              setImmediate(callback);
+            },
+          });
+          file.pipe(noop);
         }
-        break;
-      default: {
-        const noop = new Writable({
-          write(chunk, encding, callback) {
-            setImmediate(callback);
-          },
-        });
-        file.pipe(noop);
       }
     }
-  });
+  );
 
   busboy.on('field', (fieldname, val) => {
     switch (fieldname) {
@@ -88,7 +97,15 @@ function addSvc(req, res) {
   req.pipe(busboy);
 }
 
-async function listSvc(req, res) {
+/**
+ * service to handle task list endpoint
+ * @param req
+ * @param res
+ */
+export async function listSvc(
+  req: IncomingMessage,
+  res: ServerResponse
+): Promise<void> {
   try {
     const tasks = await list();
     res.setHeader('content-type', 'application/json');
@@ -101,7 +118,15 @@ async function listSvc(req, res) {
   }
 }
 
-async function doneSvc(req, res) {
+/**
+ * service to handle task done
+ * @param req
+ * @param res
+ */
+export async function doneSvc(
+  req: IncomingMessage,
+  res: ServerResponse
+): Promise<void> {
   const uri = url.parse(req.url, true);
   const id = uri.query['id'];
   if (!id) {
@@ -111,7 +136,7 @@ async function doneSvc(req, res) {
     return;
   }
   try {
-    const task = await done(id);
+    const task = await done(parseInt(id as string, 10));
     res.setHeader('content-type', 'application/json');
     res.statusCode = 200;
     res.write(JSON.stringify(task));
@@ -129,7 +154,15 @@ async function doneSvc(req, res) {
   }
 }
 
-async function cancelSvc(req, res) {
+/**
+ * service to handle cancel request
+ * @param req
+ * @param res
+ */
+export async function cancelSvc(
+  req: IncomingMessage,
+  res: ServerResponse
+): Promise<void> {
   const uri = url.parse(req.url, true);
   const id = uri.query['id'];
   if (!id) {
@@ -139,7 +172,7 @@ async function cancelSvc(req, res) {
     return;
   }
   try {
-    const task = await cancel(id);
+    const task = await cancel(parseInt(id as string, 10));
     res.setHeader('content-type', 'application/json');
     res.statusCode = 200;
     res.write(JSON.stringify(task));
@@ -157,7 +190,15 @@ async function cancelSvc(req, res) {
   }
 }
 
-async function getAttachmentSvc(req, res) {
+/**
+ * service to handle get attachment request
+ * @param req
+ * @param res
+ */
+export async function getAttachmentSvc(
+  req: IncomingMessage,
+  res: ServerResponse
+): Promise<void> {
   const uri = url.parse(req.url, true);
   const objectName = uri.pathname.replace('/attachment/', '');
   if (!objectName) {
@@ -167,7 +208,7 @@ async function getAttachmentSvc(req, res) {
   }
   try {
     const objectRead = await readFile(objectName);
-    res.setHeader('Content-Type', mime.lookup(objectName));
+    res.setHeader('Content-Type', mime.lookup(objectName) as string);
     res.statusCode = 200;
     objectRead.pipe(res);
   } catch (err) {
@@ -183,11 +224,3 @@ async function getAttachmentSvc(req, res) {
     return;
   }
 }
-
-module.exports = {
-  listSvc,
-  addSvc,
-  doneSvc,
-  cancelSvc,
-  getAttachmentSvc,
-};

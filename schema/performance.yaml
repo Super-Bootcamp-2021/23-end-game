@@ -1,0 +1,69 @@
+swagger: '2.0'
+info:
+  title: 'Performance Service'
+  description: 'API informasi kinerja'
+  version: '1.0.0'
+  license:
+    name: 'GPL-3.0'
+    url: 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+host: 'localhost'
+tags:
+  - name: 'performance'
+    description: 'endpoint untuk menampilkan informasi kinerja'
+
+paths:
+  /summary:
+    post:
+      tags:
+        - performance
+      operationId: summary
+      description: 'rangkuman informasi kinerja'
+      produces:
+        - 'application/json'
+        - 'text/plain'
+      responses:
+        200:
+          $ref: '#/responses/PerformanceInfo'
+        500:
+          $ref: '#/responses/InternalServerError'
+
+
+responses:
+  InternalServerError:
+    description: internal server error
+    examples:
+      'text/plain': kesalahan server
+  PerformanceInfo:
+    description: OK
+    schema:
+      $ref: '#/definitions/Performance'
+    examples:
+      application/json:
+        {
+          'total_task': 5,
+          'task_done': 2,
+          'task_cancelled': 3,
+          'total_worker': 3
+        }
+
+definitions:
+  Performance:
+    type: object
+    properties:
+      total_task:
+        type: integer
+        description: jumlah pekerjaan
+      task_done:
+        type: integer
+        description: jumlah pekerjaan yang sudah selesai
+      task_cancelled:
+        type: integer
+        description: jumlah pekerjaan yang dibatalkan
+      total_worker:
+        type: integer
+        description: jumlah pekerja
+    example:
+      total_task: 5
+      task_done: 2
+      task_cancelled: 3
+      total_worker: 3

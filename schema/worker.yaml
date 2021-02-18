@@ -1,0 +1,225 @@
+swagger: '2.0'
+info:
+  title: 'Worker Service'
+  description: 'API untuk mengatur daftar pekerja'
+  version: '1.0.0'
+  license:
+    name: 'GPL-3.0'
+    url: 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+host: 'localhost'
+tags:
+  - name: 'worker'
+    description: 'endpoint untuk mengubah pekerja'
+
+paths:
+  /register:
+    post:
+      tags:
+        - worker
+      operationId: register
+      description: 'untuk menambahkan perkerja baru'
+      consumes:
+        - 'multipart/form-data'
+      produces:
+        - 'application/json'
+        - 'text/plain'
+      parameters:
+        - in: formData
+          name: photo
+          type: file
+          description: foto pekerja
+          required: true
+        - in: formData
+          name: name
+          type: string
+          description: nama pekerja
+          required: true
+        - in: formData
+          name: age
+          type: integer
+          description: umur pekerja
+          required: true
+        - in: formData
+          name: bio
+          type: string
+          description: biodata singkat pekerja
+          required: true
+        - in: formData
+          name: address
+          type: string
+          description: alamat pekerja
+          required: true
+      responses:
+        200:
+          $ref: '#/responses/WorkerInfo'
+        401:
+          description: bad request
+          examples:
+            'text/plain': data registrasi pekerja tidak lengkap
+        413:
+          description: request aborted
+        500:
+          $ref: '#/responses/InternalServerError'
+
+  /list:
+    get:
+      tags:
+        - worker
+      operationId: list
+      description: meminta daftar pekerja
+      produces:
+        - 'application/json'
+        - 'text/plain'
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            description: daftar pekerja
+            items:
+              $ref: '#/definitions/Worker'
+          examples:
+            'application/json':
+              [
+                {
+                  'id': 1,
+                  'name': 'budi',
+                  'age': 24,
+                  'bio': 'tetaplah hidup walau tak berguna',
+                  'address': 'jl. semangka 12',
+                  'photo': 'photo.jpg',
+                },
+                {
+                  'id': 2,
+                  'name': 'susi',
+                  'age': 21,
+                  'bio': 'key of sukses adlah kunci kesuksesan',
+                  'address': 'jl. raya 9',
+                  'photo': 'photo-alay.jpg',
+                },
+              ]
+        500:
+          $ref: '#/responses/InternalServerError'
+
+  /info:
+    get:
+      tags:
+        - worker
+      operationId: info
+      description: meminta informasi pekerja
+      produces:
+        - 'application/json'
+        - 'text/plain'
+      parameters:
+        - in: query
+          name: id
+          type: integer
+          description: id pekerja
+          required: true
+      responses:
+        200:
+          $ref: '#/responses/WorkerInfo'
+        404:
+          $ref: '#/responses/WorkerNotFound'
+        500:
+          $ref: '#/responses/InternalServerError'
+
+  /remove:
+    delete:
+      tags:
+        - worker
+      operationId: remove
+      description: menghapus pekerja
+      produces:
+        - 'application/json'
+        - 'text/plain'
+      parameters:
+        - in: query
+          name: id
+          type: integer
+          description: id pekerja
+          required: true
+      responses:
+        200:
+          $ref: '#/responses/WorkerInfo'
+        404:
+          $ref: '#/responses/WorkerNotFound'
+        500:
+          $ref: '#/responses/InternalServerError'
+
+  /photo/{filename}:
+    get:
+      tags:
+        - worker
+      operationId: getPhoto
+      description: menampilkan foto
+      produces:
+        - 'image/png'
+        - 'image/jpg'
+        - 'image/jpeg'
+        - 'text/plain'
+      parameters:
+        - in: path
+          name: filename
+          type: string
+          description: nama file
+          required: true
+      responses:
+        200:
+          description: OK
+        404:
+          description: not found
+
+responses:
+  WorkerNotFound:
+    description: not found
+    examples:
+      'text/plain': pekerja tidak ditemukan
+  InternalServerError:
+    description: internal server error
+    examples:
+      'text/plain': kesalahan server
+  WorkerInfo:
+    description: OK
+    schema:
+      $ref: '#/definitions/Worker'
+    examples:
+      application/json:
+        {
+          'id': 1,
+          'name': 'budi',
+          'age': 24,
+          'bio': 'tetaplah hidup walau tak berguna',
+          'address': 'jl. semangka 12',
+          'photo': 'photo.jpg',
+        }
+
+definitions:
+  Worker:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: identifier pekerja
+      name:
+        type: string
+        description: nama pekerja
+      age:
+        type: integer
+        description: umur pekerja
+      bio:
+        type: string
+        description: biodata singkat pekerja
+      address:
+        type: string
+        description: alamat pekerja
+      photo:
+        type: string
+        description: foto profil pekerja
+    example:
+      id: 1
+      name: budi
+      age: 24
+      bio: tetaplah hidup walau tak berguna
+      address: jl. semangka 12
+      photo: photo.jpg

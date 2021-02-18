@@ -1,11 +1,11 @@
-const bus = require('../lib/bus');
-const {
+import * as bus from '../lib/bus';
+import {
   increaseTotalTask,
   increaseDoneTask,
   increaseCancelledTask,
   increaseTotalWorker,
   decreaseTotalWorker,
-} = require('./performance');
+} from './performance';
 
 let increaseTotalTaskSub;
 let increaseDoneTaskSub;
@@ -13,7 +13,10 @@ let increaseCancelledTaskSub;
 let increaseTotalWorkerSub;
 let decreaseTotalWorkerSub;
 
-function run() {
+/**
+ * run performance aggregation service
+ */
+export function run(): void {
   increaseTotalTaskSub = bus.subscribe('task.added', increaseTotalTask);
   increaseDoneTaskSub = bus.subscribe('task.done', increaseDoneTask);
   increaseCancelledTaskSub = bus.subscribe(
@@ -27,7 +30,10 @@ function run() {
   decreaseTotalWorkerSub = bus.subscribe('worker.removed', decreaseTotalWorker);
 }
 
-function stop() {
+/**
+ * stop performance aggergation
+ */
+export function stop(): void {
   if (increaseTotalTaskSub) {
     bus.unsubscribe(increaseTotalTaskSub);
   }
@@ -44,8 +50,3 @@ function stop() {
     bus.unsubscribe(decreaseTotalWorkerSub);
   }
 }
-
-module.exports = {
-  run,
-  stop,
-};
