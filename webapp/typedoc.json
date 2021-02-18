@@ -1,0 +1,8 @@
+{
+  "name": "Task Manger Web-App",
+  "entryPoints": [
+    "./webapp/src/"
+  ],
+  "out": "./webapp/www/docs/webapp",
+  "readme": "./webapp/README.md"
+}

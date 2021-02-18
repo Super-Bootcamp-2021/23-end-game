@@ -8,8 +8,10 @@
     "svc:start": "node ./service/dist/main.js",
     "svc:dev": "nodemon --config service/nodemon.json",
     "svc:build": "tsc --project service/tsconfig.json",
+    "svc:docs": "typedoc --tsconfig service/tsconfig.json --options service/typedoc.json",
     "web:build": "webpack --mode production",
-    "web:dev": "webpack serve --open --mode development"
+    "web:dev": "webpack serve --open --mode development",
+    "web:docs": "typedoc --tsconfig service/tsconfig.json --options service/typedoc.json"
   },
   "author": "",
   "license": "ISC",

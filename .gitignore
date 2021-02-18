@@ -7,3 +7,4 @@ dist
 .env
 webapp/www/*.js
 webapp/www/*.txt
+docs

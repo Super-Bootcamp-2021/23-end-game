@@ -18,13 +18,13 @@ pastikan semua layanan webservice dari task manager sudah berjalan
 
 1. build aplikasinya
 
-```bash
-npm run web:build
-```
+   ```bash
+   npm run web:build
+   ```
 
 1. aplikasi yang sudah dibuild akan tersedia di direktori `/webapp/www`. Kamu dapat menggunakan static server apapun untuk menjalankan aplikasi webnya
 
-```bash
-# contoh menggunakan live-server
-live-server --port=80 ./webapp/www
-```
+   ```bash
+   # contoh menggunakan live-server
+   live-server --port=80 ./webapp/www
+   ```
