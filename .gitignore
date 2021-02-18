@@ -5,3 +5,5 @@ file-storage
 dist
 .tmrc
 .env
+webapp/www/*.js
+webapp/www/*.txt
