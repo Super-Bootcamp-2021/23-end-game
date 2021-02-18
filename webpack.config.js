@@ -6,6 +6,7 @@ module.exports = {
     tasks: './webapp/src/tasks/main.ts',
     worker: './webapp/src/worker/main.ts',
     performance: './webapp/src/performance/main.ts',
+    schema: './webapp/src/schema/main.ts',
   },
   output: {
     path: path.resolve(__dirname, 'webapp/www'),
