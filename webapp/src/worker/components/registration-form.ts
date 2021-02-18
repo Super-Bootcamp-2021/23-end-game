@@ -11,7 +11,7 @@ export const RegistrationForm = Vue.extend({
       createElement(
         'form',
         {
-          domProps: { id: 'form', method: 'post' },
+          domProps: { id: 'form', method: 'post', action: '' },
           on: {
             submit: this.submitForm,
           },
@@ -52,7 +52,7 @@ export const RegistrationForm = Vue.extend({
             },
             on: {
               input: (event: Event) => {
-                this.name = (event.target as HTMLInputElement).value;
+                this.age = (event.target as HTMLInputElement).value;
               },
             },
           }),
@@ -107,7 +107,7 @@ export const RegistrationForm = Vue.extend({
           createElement('br'),
           createElement('textarea', {
             domProps: {
-              value: this.bio,
+              value: this.address,
               name: 'address',
               id: 'address',
               cols: 30,
@@ -129,12 +129,14 @@ export const RegistrationForm = Vue.extend({
       ),
     ]);
   },
-  data: {
-    name: '',
-    age: '0',
-    photo: null,
-    bio: '',
-    address: '',
+  data() {
+    return {
+      name: '',
+      age: '0',
+      photo: null,
+      bio: '',
+      address: '',
+    };
   },
   methods: {
     submitForm(event: Event) {
@@ -150,7 +152,6 @@ export const RegistrationForm = Vue.extend({
         store$.dispatch(errorAction('form isian tidak lengkap!'));
         return;
       }
-
       // register user
       store$.dispatch<any>(
         register({
@@ -161,6 +162,11 @@ export const RegistrationForm = Vue.extend({
           address: this.address,
         })
       );
+      this.name = '';
+      this.age = 0;
+      this.bio = '';
+      this.address = '';
+      this.photo = null;
       (event.target as HTMLFormElement).reset();
     },
   },

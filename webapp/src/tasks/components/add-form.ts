@@ -100,10 +100,12 @@ export const AddForm = Vue.extend({
       ),
     ]);
   },
-  data: {
-    job: '',
-    assigneeId: 0,
-    attachment: null,
+  data() {
+    return {
+      job: '',
+      assigneeId: 0,
+      attachment: null,
+    };
   },
   methods: {
     submitForm(event: Event) {
@@ -122,6 +124,9 @@ export const AddForm = Vue.extend({
           assignee_id: this.assigneeId,
         })
       );
+      this.job = '';
+      this.attachment = null;
+      this.assignee_id = 0;
       (event.target as HTMLFormElement).reset();
     },
   },

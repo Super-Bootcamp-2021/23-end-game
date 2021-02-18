@@ -24,7 +24,7 @@ new Vue({
         {
           domProps: { id: 'loading-text' },
           class: 'primary',
-          style: { display: this.state?.loading ? 'none' : null },
+          style: { display: this.state?.loading ? null : 'none' },
         },
         'memuat...'
       ),

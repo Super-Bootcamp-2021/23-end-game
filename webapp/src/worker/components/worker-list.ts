@@ -15,13 +15,13 @@ export const WorkerList = Vue.extend({
             createElement('img', {
               domProps: {
                 src: worker.photo,
-                width: '30px',
-                height: '30px',
+                width: 30,
+                height: 30,
               },
             }),
             createElement('span', worker.name),
             createElement(
-              'btn',
+              'button',
               {
                 on: {
                   click: this.removeWorker(worker.id),
