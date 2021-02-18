@@ -1,6 +1,6 @@
 {
   "ignore": ["**/*.test.ts", "**/*.spec.ts", "node_modules"],
   "watch": ["service/src"],
-  "exec": "ts-node ./service/src/maina.ts",
+  "exec": "ts-node -P ./service/tsconfig.json ./service/src/main.ts",
   "ext": "ts"
 }
