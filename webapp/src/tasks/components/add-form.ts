@@ -61,13 +61,11 @@ export const AddForm = Vue.extend({
                 },
               },
             },
-            [
-              ...(this.workers?.map((worker: Worker) =>
-                createElement('option', {
-                  domProps: { text: worker.name, value: worker.id },
-                })
-              ) ?? []),
-            ]
+            this.workers?.map((worker: Worker) =>
+              createElement('option', {
+                domProps: { text: worker.name, value: worker.id },
+              })
+            ) ?? []
           ),
           createElement('br'),
           createElement(

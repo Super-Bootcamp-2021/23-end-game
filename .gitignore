@@ -8,3 +8,5 @@ dist
 webapp/www/*.js
 webapp/www/*.txt
 docs
+
+.vercel

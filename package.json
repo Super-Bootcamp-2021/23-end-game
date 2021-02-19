@@ -11,7 +11,8 @@
     "svc:docs": "typedoc --tsconfig service/tsconfig.json --options service/typedoc.json",
     "web:build": "webpack --mode production",
     "web:dev": "webpack serve --open --mode development",
-    "web:docs": "typedoc --tsconfig service/tsconfig.json --options service/typedoc.json"
+    "web:docs": "typedoc --tsconfig service/tsconfig.json --options service/typedoc.json",
+    "web:deploy": "vercel --prod"
   },
   "author": "",
   "license": "ISC",

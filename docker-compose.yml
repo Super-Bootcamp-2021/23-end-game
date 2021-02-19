@@ -31,7 +31,7 @@ services:
     ports:
       - 5434:5432
   worker:
-    image: tm-svc:latest
+    image: ghcr.io/super-bootcamp-2021/tm-svc:latest
     command:
       - "svc:start"
       - "--"
@@ -60,7 +60,7 @@ services:
     ports:
       - 7001:80
   tasks:
-    image: tm-svc:latest
+    image: ghcr.io/super-bootcamp-2021/tm-svc:latest
     command:
       - "svc:start"
       - "--"
@@ -91,7 +91,7 @@ services:
     ports:
       - 7002:80
   performance:
-    image: tm-svc:latest
+    image: ghcr.io/super-bootcamp-2021/tm-svc:latest
     command:
       - "svc:start"
       - "--"
