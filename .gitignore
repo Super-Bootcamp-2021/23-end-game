@@ -5,8 +5,11 @@ file-storage
 dist
 .tmrc
 .env
+webapp/test/screenshots
+webapp/test/recordings
 webapp/www/*.js
 webapp/www/*.txt
 docs
+
 
 .vercel

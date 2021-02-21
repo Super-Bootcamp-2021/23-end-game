@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "target": "ES6",
+    "strictNullChecks": true,
+    "moduleResolution": "Node",
+    "lib": ["DOM", "ES2017"],
+    "types": ["cypress", "cypress-file-upload", "node"]
+  },
+  "include": ["./**/*"]
+}
