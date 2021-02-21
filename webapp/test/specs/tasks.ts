@@ -85,8 +85,8 @@ describe('task management page', () => {
       cy.get('#list').children().should('have.length', 2);
       cy.get('.item').eq(0).should('contain.text', 'memecah kebuntuan');
       cy.get('.item').eq(0).should('contain.text', 'budi');
-      cy.get('.item').eq(0).get('button.cancel').should('exist');
-      cy.get('.item').eq(0).get('button.done').should('exist');
+      cy.get('.item').eq(0).children('button.cancel').should('exist');
+      cy.get('.item').eq(0).children('button.done').should('exist');
       cy.get('.item:eq(0) a').should(
         'have.attr',
         'href',
@@ -166,7 +166,7 @@ describe('task management page', () => {
       cy.intercept('/cancel', { fixture: 'task' }).as('cancelTask');
       cy.visit('/tasks.html');
       cy.wait(['@getTasksList', '@getWorkerList']);
-      cy.get('.item').eq(0).get('button.cancel').click();
+      cy.get('.item').eq(0).children('button.cancel').click();
       cy.wait('@cancelTask');
       cy.get('#list').children().should('have.length', 1);
       cy.get('.item').eq(0).should('contain.text', 'bekerja keras');
@@ -180,7 +180,7 @@ describe('task management page', () => {
         }).as('cancelTask');
         cy.visit('/tasks.html');
         cy.wait(['@getTasksList', '@getWorkerList']);
-        cy.get('.item').eq(0).get('button.cancel').click();
+        cy.get('.item').eq(0).children('button.cancel').click();
         cy.wait('@cancelTask');
         cy.get('#error-text').should(
           'contain.text',
@@ -208,8 +208,8 @@ describe('task management page', () => {
       cy.wait('@finishTask');
       cy.get('#list').children().should('have.length', 2);
       cy.get('.item').eq(0).should('contain.text', 'memecah kebuntuan');
-      cy.get('.item').eq(0).get('button.cancel').should('not.exist');
-      cy.get('.item').eq(0).get('button.done').should('not.exist');
+      cy.get('.item').eq(0).children('button.cancel').should('not.exist');
+      cy.get('.item').eq(0).children('button.done').should('not.exist');
       cy.get('.item').eq(0).should('contain.text', 'sudah selesai');
     });
 
@@ -221,7 +221,7 @@ describe('task management page', () => {
         }).as('finishTask');
         cy.visit('/tasks.html');
         cy.wait(['@getTasksList', '@getWorkerList']);
-        cy.get('.item').eq(0).get('button.done').click();
+        cy.get('.item').eq(0).children('button.done').click();
         cy.wait('@finishTask');
         cy.get('#error-text').should(
           'contain.text',

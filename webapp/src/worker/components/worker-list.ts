@@ -11,7 +11,7 @@ export const WorkerList = Vue.extend({
       createElement('h4', 'Daftar pekerja'),
       createElement('div', { domProps: { id: 'list' } }, [
         ...(this.workers?.map((worker: Worker) =>
-          createElement('div', [
+          createElement('div', { class: 'item' }, [
             createElement('img', {
               domProps: {
                 src: worker.photo,
@@ -26,6 +26,7 @@ export const WorkerList = Vue.extend({
                 on: {
                   click: this.removeWorker(worker.id),
                 },
+                class: 'remove',
               },
               'hapus'
             ),

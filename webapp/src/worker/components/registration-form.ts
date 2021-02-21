@@ -69,7 +69,7 @@ export const RegistrationForm = Vue.extend({
               disabled: this.loading,
             },
             on: {
-              input: (event: Event) => {
+              change: (event: Event) => {
                 const files = (event.target as HTMLInputElement).files;
                 if (files?.length) {
                   this.photo = files[0];
