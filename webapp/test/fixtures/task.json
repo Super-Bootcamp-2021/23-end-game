@@ -1,0 +1,16 @@
+{
+  "id": 1,
+  "job": "memecah kebuntuan",
+  "done": false,
+  "cancelled": false,
+  "addedAt": "2021-01-18T05:10:14.425Z",
+  "attachment": "blueprint.pdf",
+  "assignee": {
+    "id": 1,
+    "name": "budi",
+    "age": 24,
+    "bio": "tetaplah hidup walau tak berguna",
+    "address": "jl. semangka 12",
+    "photo": "photo.jpg"
+  }
+}

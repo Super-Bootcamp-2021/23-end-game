@@ -23,7 +23,6 @@ export const AddForm = Vue.extend({
           createElement('br'),
           createElement('textarea', {
             domProps: {
-              value: this.job,
               name: 'job',
               id: 'job',
               cols: 30,
@@ -31,6 +30,7 @@ export const AddForm = Vue.extend({
               placeholder: 'deskripsi pekerjaan',
             },
             props: {
+              value: this.job,
               disabled: this.loading,
             },
             on: {
@@ -51,6 +51,7 @@ export const AddForm = Vue.extend({
               },
               props: {
                 disabled: this.loading,
+                value: this.assigneeId,
               },
               on: {
                 input: (event: Event) => {
@@ -63,7 +64,10 @@ export const AddForm = Vue.extend({
             },
             this.workers?.map((worker: Worker) =>
               createElement('option', {
-                domProps: { text: worker.name, value: worker.id },
+                domProps: {
+                  text: worker.name,
+                  value: worker.id,
+                },
               })
             ) ?? []
           ),
@@ -82,9 +86,10 @@ export const AddForm = Vue.extend({
             },
             props: {
               disabled: this.loading,
+              value: this.attachment,
             },
             on: {
-              input: (event: Event) => {
+              change: (event: Event) => {
                 const files = (event.target as HTMLInputElement).files;
                 if (files?.length) {
                   this.attachment = files[0];
@@ -105,6 +110,13 @@ export const AddForm = Vue.extend({
       attachment: null,
     };
   },
+  watch: {
+    workers(val: Worker[]) {
+      if (val.length && !this.assigneeId) {
+        this.assigneeId = val[0].id;
+      }
+    },
+  },
   methods: {
     submitForm(event: Event) {
       event.preventDefault();
@@ -124,7 +136,7 @@ export const AddForm = Vue.extend({
       );
       this.job = '';
       this.attachment = null;
-      this.assignee_id = 0;
+      this.assigneeId = 0;
       (event.target as HTMLFormElement).reset();
     },
   },

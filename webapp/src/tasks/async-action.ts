@@ -60,29 +60,22 @@ export const cancel = (id: number) => async (
 };
 
 /**
- * action to get list of tasks
+ * action to get list of tasks and worker
  * @param dispatch
  */
-export const getList = async (dispatch: Dispatch): Promise<void> => {
+export const loadData = async (dispatch: Dispatch): Promise<void> => {
   dispatch(loadingAction());
   try {
     const tasks = await taskSvc.list();
     dispatch(tasksLoadedAction(tasks));
   } catch (err) {
     dispatch(errorAction('gagal memuat daftar pekerjaan'));
+    return;
   }
-};
-
-/**
- * action to get list of registered workers
- * @param dispatch
- */
-export const getWorkersList = async (dispatch: Dispatch): Promise<void> => {
-  dispatch(loadingAction());
   try {
     const workers = await workerSvc.list();
     dispatch(workersLoadedAction(workers));
   } catch (err) {
-    dispatch(errorAction('gagal membatalkan pekerjaan'));
+    dispatch(errorAction('gagal memuat daftar pekerja'));
   }
 };

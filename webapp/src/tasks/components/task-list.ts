@@ -11,25 +11,31 @@ export const TaskList = Vue.extend({
       createElement('h4', 'Daftar tugas'),
       createElement('div', { domProps: { id: 'list' } }, [
         ...(this.tasks?.map((task: Task) =>
-          createElement('div', [
+          createElement('div', { class: 'item' }, [
             createElement(
               'a',
               { domProps: { href: task.attachment, target: '_blank' } },
               'lampiran'
             ),
+            ' - ',
             createElement('span', task.job),
+            ' - ',
             createElement('span', task.assignee),
+            ' - ',
             ...(task.done
               ? [createElement('span', 'sudah selesai')]
               : [
                   createElement(
                     'button',
-                    { on: { click: this.cancelTask(task.id) } },
+                    {
+                      on: { click: this.cancelTask(task.id) },
+                      class: 'cancel',
+                    },
                     'batal'
                   ),
                   createElement(
                     'button',
-                    { on: { click: this.finishTask(task.id) } },
+                    { on: { click: this.finishTask(task.id) }, class: 'done' },
                     'selesai'
                   ),
                 ]),

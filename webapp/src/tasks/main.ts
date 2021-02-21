@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import './main.css';
-import { getList, getWorkersList } from './async-action';
+import { loadData } from './async-action';
 import { store$ } from './store';
 import Vue, { CreateElement } from 'vue';
 import { AddForm } from './components/add-form';
@@ -45,7 +45,6 @@ new Vue({
     store$.subscribe(() => {
       this.state = store$.getState();
     });
-    store$.dispatch<any>(getList);
-    store$.dispatch<any>(getWorkersList);
+    store$.dispatch<any>(loadData);
   },
 });

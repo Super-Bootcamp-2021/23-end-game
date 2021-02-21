@@ -76,7 +76,7 @@ paths:
                   'cancelled': false,
                   'addedAt': '2021-01-18T05:10:14.425Z',
                   'attachment': 'blueprint.pdf',
-                  'asignee': {
+                  'assignee': {
                     'id': 1,
                     'name': 'budi',
                     'age': 24,
@@ -92,7 +92,7 @@ paths:
                   'cancelled': false,
                   'addedAt': '2021-01-18T05:10:14.425Z',
                   'attachment': 'prototype.pdf',
-                  'asignee': {
+                  'assignee': {
                     'id': 1,
                     'name': 'budi',
                     'age': 24,
@@ -200,7 +200,7 @@ responses:
           'cancelled': false,
           'addedAt': '2021-01-18T05:10:14.425Z',
           'attachment': 'blueprint.pdf',
-          'asignee': {
+          'assignee': {
             'id': 1,
             'name': 'budi',
             'age': 24,
