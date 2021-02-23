@@ -1,9 +1,9 @@
 import { read, save } from '../lib/kv';
 
-const TASK_TOTAL_KEY = 'task.total';
-const TASK_DONE_KEY = 'task.done';
-const TASK_CANCELLED_KEY = 'task.cancelled';
-const WORKER_TOTAL_KEY = 'worker.total';
+export const TASK_TOTAL_KEY = 'task.total';
+export const TASK_DONE_KEY = 'task.done';
+export const TASK_CANCELLED_KEY = 'task.cancelled';
+export const WORKER_TOTAL_KEY = 'worker.total';
 
 export interface Performance {
   total_task: number;

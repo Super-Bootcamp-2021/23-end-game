@@ -8,7 +8,8 @@
     "lib": ["es2017", "esnext.asynciterable"],
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "types": ["jest"]
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*", "./test/**/*"]
 }

@@ -14,7 +14,7 @@ const { postgres, minio, nats, redis, performance, worker, task } = config;
 /**
  * intitate database and service connection
  */
-async function init(): Promise<void> {
+export async function init(): Promise<void> {
   try {
     console.log('connect to database');
     await orm.connect([Worker, Task], {
@@ -68,7 +68,7 @@ async function onStop() {
  * application main routine
  * @param command command argument, only allow task, worker or performance
  */
-async function main(command: string): Promise<void> {
+export async function main(command: string): Promise<void> {
   switch (command) {
     case 'performance':
       await init();
@@ -87,5 +87,3 @@ async function main(command: string): Promise<void> {
       console.log('command yang valid: task, worker, performance');
   }
 }
-
-main(process.argv[2]);
