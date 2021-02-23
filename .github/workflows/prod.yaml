@@ -87,4 +87,5 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - run: npm i
+      - run: npm run web:build
       - run: npm run web:test
