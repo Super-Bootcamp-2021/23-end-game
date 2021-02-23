@@ -72,6 +72,10 @@ jobs:
           tm_task__server__port: 7002
           tm_task__workerBaseUrl: http://localhost:7001
           tm_performance__server__port: 7003
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: service/coverage
 
 
   webapp-test:

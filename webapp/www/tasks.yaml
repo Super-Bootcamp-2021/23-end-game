@@ -1,0 +1,272 @@
+swagger: '2.0'
+info:
+  title: 'Task Service'
+  description: 'API untuk mengatur pekerjaan'
+  version: '1.0.0'
+  license:
+    name: 'GPL-3.0'
+    url: 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+host: 'localhost'
+tags:
+  - name: 'task'
+    description: 'endpoint untuk mengatur pekerjaan'
+
+paths:
+  /add:
+    post:
+      tags:
+        - task
+      operationId: add
+      description: 'untuk menambahkan perkerjaan baru'
+      consumes:
+        - 'multipart/form-data'
+      produces:
+        - 'application/json'
+        - 'text/plain'
+      parameters:
+        - in: formData
+          name: attachment
+          type: file
+          description: lampiran tambahan
+          required: true
+        - in: formData
+          name: job
+          type: string
+          description: informasi / deskripsi pekerjaan
+          required: true
+        - in: formData
+          name: assignee_id
+          type: integer
+          description: di petugas
+          required: true
+      responses:
+        200:
+          $ref: '#/responses/TaskInfo'
+        401:
+          description: bad request
+          examples:
+            'text/plain': data pekerjaan baru tidak lengkap
+        500:
+          $ref: '#/responses/InternalServerError'
+
+  /list:
+    get:
+      tags:
+        - task
+      operationId: list
+      description: meminta daftar pekerjaan
+      produces:
+        - 'application/json'
+        - 'text/plain'
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            description: daftar pekerjaan
+            items:
+              $ref: '#/definitions/Task'
+          examples:
+            'application/json':
+              [
+                {
+                  'id': 1,
+                  'job': 'memecah kebuntuan',
+                  'done': false,
+                  'cancelled': false,
+                  'addedAt': '2021-01-18T05:10:14.425Z',
+                  'attachment': 'blueprint.pdf',
+                  'assignee': {
+                    'id': 1,
+                    'name': 'budi',
+                    'age': 24,
+                    'bio': 'tetaplah hidup walau tak berguna',
+                    'address': 'jl. semangka 12',
+                    'photo': 'photo.jpg',
+                  }
+                },
+                {
+                  'id': 2,
+                  'job': 'mencari cari',
+                  'done': false,
+                  'cancelled': false,
+                  'addedAt': '2021-01-18T05:10:14.425Z',
+                  'attachment': 'prototype.pdf',
+                  'assignee': {
+                    'id': 1,
+                    'name': 'budi',
+                    'age': 24,
+                    'bio': 'tetaplah hidup walau tak berguna',
+                    'address': 'jl. semangka 12',
+                    'photo': 'photo.jpg',
+                  }
+                }
+              ]
+        500:
+          $ref: '#/responses/InternalServerError'
+
+  /done:
+    put:
+      tags:
+        - task
+      operationId: done
+      description: memandakan pekerjaan selesai
+      produces:
+        - 'application/json'
+        - 'text/plain'
+      parameters:
+        - in: query
+          name: id
+          type: integer
+          description: id pekerjaan
+          required: true
+      responses:
+        200:
+          $ref: '#/responses/TaskInfo'
+        404:
+          $ref: '#/responses/TaskNotFound'
+        403:
+          description: forbidden
+          examples:
+            'text/plain': pekerjaan sudah selesai
+        500:
+          $ref: '#/responses/InternalServerError'
+
+  /cancel:
+    put:
+      tags:
+        - task
+      operationId: cancel
+      description: membatalkan pekerjaan
+      produces:
+        - 'application/json'
+        - 'text/plain'
+      parameters:
+        - in: query
+          name: id
+          type: integer
+          description: id pekerjaan
+          required: true
+      responses:
+        200:
+          $ref: '#/responses/TaskInfo'
+        404:
+          $ref: '#/responses/TaskNotFound'
+        500:
+          $ref: '#/responses/InternalServerError'
+
+  /attachment/{filename}:
+    get:
+      tags:
+        - task
+      operationId: getAttachment
+      description: download lampiran
+      produces:
+        - 'application/msword'
+        - 'application/pdf'
+        - 'image/jpeg'
+        - 'text/plain'
+      parameters:
+        - in: path
+          name: filename
+          type: string
+          description: nama file
+          required: true
+      responses:
+        200:
+          description: OK
+        404:
+          description: not found
+
+responses:
+  TaskNotFound:
+    description: not found
+    examples:
+      'text/plain': pekerjaan tidak ditemukan
+  InternalServerError:
+    description: internal server error
+    examples:
+      'text/plain': kesalahan server
+  TaskInfo:
+    description: OK
+    schema:
+      $ref: '#/definitions/Task'
+    examples:
+      application/json:
+        {
+          'id': 1,
+          'job': 'memecah kebuntuan',
+          'done': false,
+          'cancelled': false,
+          'addedAt': '2021-01-18T05:10:14.425Z',
+          'attachment': 'blueprint.pdf',
+          'assignee': {
+            'id': 1,
+            'name': 'budi',
+            'age': 24,
+            'bio': 'tetaplah hidup walau tak berguna',
+            'address': 'jl. semangka 12',
+            'photo': 'photo.jpg',
+          }
+        }
+
+definitions:
+  Task:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: identifier pekerjaan
+      job:
+        type: string
+        description: detail pekerjaan
+      done:
+        type: boolean
+        description: true jika pekerjaan telah selesai
+      cancelled:
+        type: boolean
+        description: true jika pekerjaan telah dibatalkan
+      attachment:
+        type: string
+        description: lampiran pendukung
+      addedAt:
+        type: string
+        description: tanggal entri
+      assignee:
+        $ref: '#/definitions/Worker'
+    example:
+      id: 1
+      job: memecah kebuntuan
+      done: false
+      cancelled: false
+      attachment: blueprint.pdf
+      addedAt: '2021-01-18T05:10:14.425Z'
+  
+  Worker:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: identifier pekerja
+      name:
+        type: string
+        description: nama pekerja
+      age:
+        type: integer
+        description: umur pekerja
+      bio:
+        type: string
+        description: biodata singkat pekerja
+      address:
+        type: string
+        description: alamat pekerja
+      photo:
+        type: string
+        description: foto profil pekerja
+    example:
+      id: 1
+      name: budi
+      age: 24
+      bio: tetaplah hidup walau tak berguna
+      address: jl. semangka 12
+      photo: photo.jpg

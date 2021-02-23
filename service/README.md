@@ -1,6 +1,10 @@
 # Task Manager Service
 
-web service untuk melayani manajemen pekerjaan
+web service untuk melayani manajemen pekerjaan. service ini terdiri dari
+- [worker service ![worker](https://validator.swagger.io/validator?url=https%3A%2F%2Ftask-manager-nu.vercel.app%2Fworker.yaml)](https://task-manager-nu.vercel.app/worker.yaml)
+- [tasks service ![worker](https://validator.swagger.io/validator?url=https%3A%2F%2Ftask-manager-nu.vercel.app%2Ftasks.yaml)](https://task-manager-nu.vercel.app/tasks.yaml)
+- [performance service ![worker](https://validator.swagger.io/validator?url=https%3A%2F%2Ftask-manager-nu.vercel.app%2Fperformance.yaml)](https://task-manager-nu.vercel.app/performance.yaml)
+
 
 ## Sebelum Memulai
 
