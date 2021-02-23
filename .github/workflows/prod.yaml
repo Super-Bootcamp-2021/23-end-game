@@ -52,11 +52,15 @@ jobs:
       - run: npm run lint
       - run: npm run svc:test
         env:
+          tm_postgres__host: postgres
           tm_postgres__username: postgres
           tm_postgres__password: postgres
           tm_postgres__database: taskmanager
+          tm_minio__endPoint: minio
           tm_minio__accessKey: minio-root
           tm_minio__secretKey: minio-root-password
+          tm_nats__url: nats://nats:4222
+          tm_redis__host: redis
           tm_worker__server__port: 7001
           tm_task__server__port: 7002
           tm_task__workerBaseUrl: http://localhost:7001
