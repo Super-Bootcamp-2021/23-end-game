@@ -13,13 +13,19 @@ jobs:
     services:
       redis:
         image: redis:5
+        ports:
+          - 6379:6379
       nats:
         image: nats:2
+        ports:
+          - 4222:4222
       minio:
         image: bitnami/minio:latest
         env:
           MINIO_ACCESS_KEY: minio-root
           MINIO_SECRET_KEY: minio-root-password
+        ports:
+          - 9000:9000
       postgres:
         image: postgres:13
         env:
@@ -31,6 +37,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 5432:5432
 
     # run test automations
     steps:
@@ -42,7 +50,10 @@ jobs:
         env:
           cache-name: cache-node-modules
         with:
-          path: ~/.npm
+          path: |
+            ~/.cache/Cypress
+            ~/.npm
+            node_modules
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -52,15 +63,11 @@ jobs:
       - run: npm run lint
       - run: npm run svc:test
         env:
-          tm_postgres__host: postgres
           tm_postgres__username: postgres
           tm_postgres__password: postgres
           tm_postgres__database: taskmanager
-          tm_minio__endPoint: minio
           tm_minio__accessKey: minio-root
           tm_minio__secretKey: minio-root-password
-          tm_nats__url: nats://nats:4222
-          tm_redis__host: redis
           tm_worker__server__port: 7001
           tm_task__server__port: 7002
           tm_task__workerBaseUrl: http://localhost:7001
@@ -84,7 +91,10 @@ jobs:
         env:
           cache-name: cache-node-modules
         with:
-          path: ~/.npm
+          path: |
+            ~/.cache/Cypress
+            ~/.npm
+            node_modules
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -93,3 +103,9 @@ jobs:
       - run: npm i
       - run: npm run web:build
       - run: npm run web:test
+      - uses: actions/upload-artifact@v2
+        with:
+          name: test results
+          path: |
+            webapp/test/recordings
+            webapp/test/screenshots

@@ -5,5 +5,7 @@
   "fixturesFolder": "webapp/test/fixtures",
   "videosFolder": "webapp/test/recordings",
   "screenshotsFolder": "webapp/test/screenshots",
-  "fileServerFolder": "webapp/www"
+  "fileServerFolder": "webapp/www",
+  "defaultCommandTimeout": 10000,
+  "requestTimeout": 20000
 }
