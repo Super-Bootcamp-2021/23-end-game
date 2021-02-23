@@ -15,6 +15,7 @@ const { postgres, minio, nats, redis, performance, worker, task } = config;
  * intitate database and service connection
  */
 export async function init(): Promise<void> {
+  console.debug(config);
   try {
     console.log('connect to database');
     await orm.connect([Worker, Task], {

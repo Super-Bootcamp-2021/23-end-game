@@ -26,6 +26,11 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: taskmanager
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     # run test automations
     steps:
@@ -33,8 +38,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      - id: vars
-        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - uses: actions/cache@v2
         env:
           cache-name: cache-node-modules
@@ -58,3 +61,30 @@ jobs:
           tm_task__server__port: 7002
           tm_task__workerBaseUrl: http://localhost:7001
           tm_performance__server__port: 7003
+
+
+  webapp-test:
+    name: end to end webapp test
+    runs-on: ubuntu-latest
+
+    # run test automations
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cypress-io/github-action@v2
+        with:
+          browser: chrome
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - run: npm i
+      - run: npm run web:test
