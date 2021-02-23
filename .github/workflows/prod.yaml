@@ -1,0 +1,60 @@
+name: prod
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  service-test:
+    name: end to end service test
+    runs-on: ubuntu-latest
+
+    # prerequisite service
+    services:
+      redis:
+        image: redis:5
+      nats:
+        image: nats:2
+      minio:
+        image: bitnami/minio:latest
+        env:
+          MINIO_ACCESS_KEY: minio-root
+          MINIO_SECRET_KEY: minio-root-password
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: taskmanager
+
+    # run test automations
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - run: npm i
+      - run: npm run lint
+      - run: npm run svc:test
+        env:
+          tm_postgres__username: postgres
+          tm_postgres__password: postgres
+          tm_postgres__database: taskmanager
+          tm_minio__accessKey: minio-root
+          tm_minio__secretKey: minio-root-password
+          tm_worker__server__port: 7001
+          tm_task__server__port: 7002
+          tm_task__workerBaseUrl: http://localhost:7001
+          tm_performance__server__port: 7003
