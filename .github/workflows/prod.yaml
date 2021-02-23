@@ -97,6 +97,12 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
+      - run: echo $WEBENV > .env
+        env:
+          WEBENV: |-
+            WORKER_SERVICE_BASEURL='http://localhost:7001'
+            TASK_SERVICE_BASEURL='http://localhost:7002'
+            PERFORMANCE_SERVICE_BASEURL='http://localhost:7003'
       - uses: cypress-io/github-action@v2
         with:
           build: npm run web:build
