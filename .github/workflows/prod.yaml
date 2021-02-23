@@ -81,9 +81,6 @@ jobs:
     # run test automations
     steps:
       - uses: actions/checkout@v2
-      - uses: cypress-io/github-action@v2
-        with:
-          browser: chrome
       - uses: actions/setup-node@v1
         with:
           node-version: 14.x
@@ -100,9 +97,10 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - run: npm i
-      - run: npm run web:build
-      - run: npm run web:test
+      - uses: cypress-io/github-action@v2
+        with:
+          build: npm run web:build
+          browser: chrome
       - uses: actions/upload-artifact@v2
         with:
           name: test results
